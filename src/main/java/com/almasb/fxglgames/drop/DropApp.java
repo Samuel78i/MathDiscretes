@@ -9,10 +9,27 @@ package com.almasb.fxglgames.drop;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
+import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
+import com.almasb.fxgl.dsl.components.LiftComponent;
+import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.components.CollidableComponent;
+import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.BoundingShape;
+import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.HitBox;
+import com.almasb.fxgl.physics.PhysicsComponent;
+import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
+import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.input.MouseButton;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+
 // NOTE: this import above is crucial, it pulls in many useful methods
 
 /**
@@ -36,77 +53,100 @@ public class DropApp extends GameApplication {
     /**
      * Types of entities in this game.
      */
+    private static final int NUM_PLANKS = 10;
+    private static final int BOARD_ROWS = 10;
+    private static final int BOARD_COLUMNS = 20;
+    private static final int BALL_RADIUS = 5;
+
+    private Entity ball;
+
     public enum Type {
-        DROPLET, BUCKET
+        BALL, NAIL
     }
 
     @Override
     protected void initSettings(GameSettings settings) {
-        // initialize common game / window settings.
-        settings.setTitle("Drop");
+        settings.setWidth(800);
+        settings.setHeight(600);
+        settings.setTitle("Galton's Plank Showcase");
         settings.setVersion("1.0");
-        settings.setWidth(480);
-        settings.setHeight(800);
     }
 
     @Override
     protected void initGame() {
-        spawnBucket();
-
-        // creates a timer that runs spawnDroplet() every second
-        run(() -> spawnDroplet(), Duration.seconds(1));
-
-        // loop background music located in /resources/assets/music/
-        loopBGM("bgm.mp3");
-    }
-
-    @Override
-    protected void initPhysics() {
-        onCollisionBegin(Type.BUCKET, Type.DROPLET, (bucket, droplet) -> {
-
-            // code in this block is called when there is a collision between Type.BUCKET and Type.DROPLET
-
-            // remove the collided droplet from the game
-            droplet.removeFromWorld();
-
-            // play a sound effect located in /resources/assets/sounds/
-            play("drop.wav");
-        });
-    }
-
-    @Override
-    protected void onUpdate(double tpf) {
-
-        // for each entity of Type.DROPLET translate (move) it down
-        getGameWorld().getEntitiesByType(Type.DROPLET).forEach(droplet -> droplet.translateY(150 * tpf));
-    }
-
-    private void spawnBucket() {
-        // build an entity with Type.BUCKET
-        // at the position X = getAppWidth() / 2 and Y = getAppHeight() - 200
-        // with a view "bucket.png", which is an image located in /resources/assets/textures/
-        // also create a bounding box from that view
-        // make the entity collidable
-        // finally, complete building and attach to the game world
-
-        Entity bucket = entityBuilder()
-                .type(Type.BUCKET)
-                .at(getAppWidth() / 2, getAppHeight() - 200)
-                .viewWithBBox("bucket.png")
-                .collidable()
-                .buildAndAttach();
-
-        // bind bucket's X value to mouse X
-        bucket.xProperty().bind(getInput().mouseXWorldProperty());
-    }
-
-    private void spawnDroplet() {
         entityBuilder()
-                .type(Type.DROPLET)
-                .at(FXGLMath.random(0, getAppWidth() - 64), 0)
-                .viewWithBBox("droplet.png")
-                .collidable()
+                .buildScreenBoundsAndAttach(40);
+        for (int row = 0; row < 600; row += 50) {
+            for (int col = 0; col < 800 - row; col += 50) {
+                spawnBoard(row, col);
+            }
+        }
+        spawnBall();
+    }
+
+    @Override
+    protected void initInput() {
+        getInput().addAction(new UserAction("trtr") {
+            private double x;
+            private double y;
+
+            @Override
+            protected void onActionBegin() {
+                x = getInput().getMouseXWorld();
+                y = getInput().getMouseYWorld();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                var endx = getInput().getMouseXWorld();
+                var endy = getInput().getMouseYWorld();
+
+                spawnBall();
+            }
+        }, MouseButton.PRIMARY);
+    }
+
+
+
+    private void spawnBoard(double x, double y) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setFixtureDef(new FixtureDef().density(25.5f).restitution(0.5f));
+        physics.setBodyType(BodyType.STATIC);
+
+        var t = texture("brick.png")
+                .subTexture(new Rectangle2D(0, 0, 15, 14))
+                .multiplyColor(Color.RED);
+
+        entityBuilder()
+                        .at(x, y)
+                        .viewWithBBox(t)
+                        .with(physics)
+                        .buildAndAttach();
+
+    }
+
+
+
+    private void spawnBall() {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setFixtureDef(new FixtureDef().density(6.5f).friction(1.0f).restitution(0.05f));
+        physics.setBodyType(BodyType.DYNAMIC);
+
+        physics.setOnPhysicsInitialized(() -> {
+            physics.setLinearVelocity(0, 50 * 5);
+        });
+
+        ball = entityBuilder()
+                .at(400, 50)
+                .bbox(new HitBox(BoundingShape.circle(15)))
+                .view(texture("img_1.png", 15, 15))
+                .with(physics)
+                .with(new ExpireCleanComponent(Duration.seconds(5)).animateOpacity())
                 .buildAndAttach();
+    }
+
+    private void dropBall() {
+        //ball.getComponent(PhysicsComponent.class).setLinearVelocity(FXGLMath.random(-200, 200), 600);
     }
 
     public static void main(String[] args) {
