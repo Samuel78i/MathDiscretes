@@ -76,32 +76,21 @@ public class DropApp extends GameApplication {
     protected void initGame() {
         entityBuilder()
                 .buildScreenBoundsAndAttach(40);
+
+        //TODO
         for (int row = 0; row < 600; row += 50) {
             for (int col = 0; col < 800 - row; col += 50) {
                 spawnBoard(row, col);
             }
         }
-        spawnBall();
     }
 
     @Override
     protected void initInput() {
         getInput().addAction(new UserAction("trtr") {
-            private double x;
-            private double y;
-
-            @Override
-            protected void onActionBegin() {
-                x = getInput().getMouseXWorld();
-                y = getInput().getMouseYWorld();
-            }
-
             @Override
             protected void onActionEnd() {
-                var endx = getInput().getMouseXWorld();
-                var endy = getInput().getMouseYWorld();
-
-                spawnBall();
+                spawnBall(getInput().getMouseXWorld());
             }
         }, MouseButton.PRIMARY);
     }
@@ -127,7 +116,7 @@ public class DropApp extends GameApplication {
 
 
 
-    private void spawnBall() {
+    private void spawnBall(double x) {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setFixtureDef(new FixtureDef().density(6.5f).friction(1.0f).restitution(0.05f));
         physics.setBodyType(BodyType.DYNAMIC);
@@ -137,7 +126,7 @@ public class DropApp extends GameApplication {
         });
 
         ball = entityBuilder()
-                .at(400, 50)
+                .at(x, 50)
                 .bbox(new HitBox(BoundingShape.circle(15)))
                 .view(texture("img_1.png", 15, 15))
                 .with(physics)
