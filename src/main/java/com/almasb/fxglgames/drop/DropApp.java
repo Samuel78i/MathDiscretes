@@ -67,7 +67,7 @@ public class DropApp extends GameApplication {
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(800);
-        settings.setHeight(600);
+        settings.setHeight(900);
         settings.setTitle("Galton's Plank Showcase");
         settings.setVersion("1.0");
     }
@@ -83,14 +83,14 @@ public class DropApp extends GameApplication {
 
         double xFirstOne = firstTriangle.getX();
         double yFirstOne = firstTriangle.getY();
-        for(int i = 1; i < 5; i++){
-            Entity e = spawnBoard(xFirstOne- 35, yFirstOne + 70);
+        for(int i = 1; i < 10; i++){
+        	Entity e = spawnBoard(xFirstOne - 30, yFirstOne + 30);
             xFirstOne = e.getX();
             yFirstOne = e.getY();
             double x = e.getX();
             double y = e.getY();
             for(int j = 0; j<i; j++){
-                e = spawnBoard(x + 70, y);
+                e = spawnBoard(x + 60, y);
                 x = e.getX();
                 y = e.getY();
             }
@@ -124,7 +124,7 @@ public class DropApp extends GameApplication {
                 .multiplyColor(Color.RED);
 
         return entityBuilder()
-                .at(400, 300)
+                .at(400, 75)//400,300
                 .viewWithBBox(t)
                 .with(physics)
                 .buildAndAttach();
