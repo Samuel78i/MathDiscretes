@@ -77,17 +77,35 @@ public class DropApp extends GameApplication {
         entityBuilder()
                 .buildScreenBoundsAndAttach(40);
 
-        //TODO
-        for (int row = 0; row < 600; row += 50) {
-            for (int col = 0; col < 800 - row; col += 50) {
-                spawnBoard(row, col);
+
+
+        Entity firstTriangle = spawnFirstTriangle();
+
+        double xFirstOne = firstTriangle.getX();
+        double yFirstOne = firstTriangle.getY();
+        for(int i = 1; i < 5; i++){
+            Entity e = spawnBoard(xFirstOne- 35, yFirstOne + 70);
+            xFirstOne = e.getX();
+            yFirstOne = e.getY();
+            double x = e.getX();
+            double y = e.getY();
+            for(int j = 0; j<i; j++){
+                e = spawnBoard(x + 70, y);
+                x = e.getX();
+                y = e.getY();
             }
         }
+        //TODO
+//        for (int row = 0; row < 600; row += 50) {
+//            for (int col = 0; col < 800 - row; col += 50) {
+//                spawnBoard(row, col);
+//            }
+//        }
     }
 
     @Override
     protected void initInput() {
-        getInput().addAction(new UserAction("trtr") {
+        getInput().addAction(new UserAction("ballSpawn") {
             @Override
             protected void onActionEnd() {
                 spawnBall(getInput().getMouseXWorld());
@@ -97,16 +115,33 @@ public class DropApp extends GameApplication {
 
 
 
-    private void spawnBoard(double x, double y) {
+    private Entity spawnFirstTriangle(){
         PhysicsComponent physics = new PhysicsComponent();
-        physics.setFixtureDef(new FixtureDef().density(25.5f).restitution(0.5f));
         physics.setBodyType(BodyType.STATIC);
 
         var t = texture("brick.png")
                 .subTexture(new Rectangle2D(0, 0, 15, 14))
                 .multiplyColor(Color.RED);
 
-        entityBuilder()
+        return entityBuilder()
+                .at(400, 300)
+                .viewWithBBox(t)
+                .with(physics)
+                .buildAndAttach();
+
+
+    }
+
+
+    private Entity spawnBoard(double x, double y) {
+        PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.STATIC);
+
+        var t = texture("brick.png")
+                .subTexture(new Rectangle2D(0, 0, 15, 14))
+                .multiplyColor(Color.RED);
+
+        return entityBuilder()
                         .at(x, y)
                         .viewWithBBox(t)
                         .with(physics)
@@ -127,8 +162,8 @@ public class DropApp extends GameApplication {
 
         ball = entityBuilder()
                 .at(x, 50)
-                .bbox(new HitBox(BoundingShape.circle(15)))
-                .view(texture("img_1.png", 15, 15))
+                .bbox(new HitBox(BoundingShape.circle(9)))
+                .view(texture("img_1.png", 25, 25))
                 .with(physics)
                 .with(new ExpireCleanComponent(Duration.seconds(5)).animateOpacity())
                 .buildAndAttach();
