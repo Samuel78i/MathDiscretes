@@ -83,31 +83,31 @@ public class DropApp extends GameApplication {
 
         double xFirstOne = firstTriangle.getX();
         double yFirstOne = firstTriangle.getY();
+        double x = 0;
+        double y = 0;
         for(int i = 1; i < 10; i++){
-        	Entity e = spawnBoard(xFirstOne - 30, yFirstOne + 30);
+        	Entity e;
+        	if(i==9) {
+        		e = spawnWall(xFirstOne - 89, yFirstOne + 35);
+        		e = spawnBoard(xFirstOne - 90, yFirstOne + 30);
+        		e = spawnWall(xFirstOne - 29, yFirstOne + 35);
+        		e = spawnBoard(xFirstOne - 30, yFirstOne + 30);}
+        	else {e = spawnBoard(xFirstOne - 30, yFirstOne + 30);}
             xFirstOne = e.getX();
             yFirstOne = e.getY();
-            double x = e.getX();
-            double y = e.getY();
+            x = e.getX();
+            y = e.getY();
             for(int j = 0; j<i; j++){
             	if(i==9) {
-            		e = spawnWall(x + 60, y);
-	                x = e.getX();
-	                y = e.getY();
-            	} else {
-            		e = spawnBoard(x + 60, y);
-	                x = e.getX();
-	                y = e.getY();
+            		e = spawnWall(x + 61, y+6);
             	}
-               
+        		e = spawnBoard(x + 60, y);
+                x = e.getX();
+                y = e.getY();
             }
         }
-        //TODO
-//        for (int row = 0; row < 600; row += 50) {
-//            for (int col = 0; col < 800 - row; col += 50) {
-//                spawnBoard(row, col);
-//            }
-//        }
+        Entity e = spawnWall(x + 61, y+6);
+        e = spawnBoard(x + 60, y);
     }
 
     @Override
@@ -115,7 +115,8 @@ public class DropApp extends GameApplication {
         getInput().addAction(new UserAction("ballSpawn") {
             @Override
             protected void onActionEnd() {
-                spawnBall(getInput().getMouseXWorld());
+                //spawnBall(getInput().getMouseXWorld());
+            	spawnBall();
             }
         }, MouseButton.PRIMARY);
     }
@@ -152,7 +153,7 @@ public class DropApp extends GameApplication {
 
 
 
-    private void spawnBall(double x) {
+    private void spawnBall() {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setFixtureDef(new FixtureDef().density(6.5f).friction(1.0f).restitution(0.05f));
         physics.setBodyType(BodyType.DYNAMIC);
@@ -162,7 +163,7 @@ public class DropApp extends GameApplication {
         });
 
         ball = entityBuilder()
-                .at(x, 50)
+                .at(395, 10) // ici à voir, normalement 400 pour que çe soit aligner au premier clou mais si on met 400 c'est pas aligner et ça bouge pas
                 .bbox(new HitBox(BoundingShape.circle(9)))
                 .view(texture("img_1.png", 25, 25))
                 .with(physics)
@@ -173,15 +174,22 @@ public class DropApp extends GameApplication {
     	PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
-        var t = texture("Capture d’écran de 2021-12-17 16-52-19.png")//réussir à enlever la texture
-                .subTexture(new Rectangle2D(0, 0, 15, 550))
-                .multiplyColor(Color.RED);
+        var t = texture("Wall.png")//réussir à enlever la texture
+                .subTexture(new Rectangle2D(0, 0, 14, 550));
 
         return entityBuilder()
                         .at(x, y)
                         .viewWithBBox(t)
                         .with(physics)
                         .buildAndAttach();
+        
+        /* return entityBuilder()
+                .at(400, 75)
+                .bbox(new HitBox(BoundingShape.circle(9)))
+                .view(texture("nail.png", 15, 15))
+                .with(physics)
+                .buildAndAttach();
+                */
     }
 
     private void dropBall() {
