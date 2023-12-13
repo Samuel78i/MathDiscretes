@@ -90,9 +90,16 @@ public class DropApp extends GameApplication {
             double x = e.getX();
             double y = e.getY();
             for(int j = 0; j<i; j++){
-                e = spawnBoard(x + 60, y);
-                x = e.getX();
-                y = e.getY();
+            	if(i==9) {
+            		e = spawnWall(x + 60, y);
+	                x = e.getX();
+	                y = e.getY();
+            	} else {
+            		e = spawnBoard(x + 60, y);
+	                x = e.getX();
+	                y = e.getY();
+            	}
+               
             }
         }
         //TODO
@@ -167,6 +174,21 @@ public class DropApp extends GameApplication {
                 .with(physics)
                 .with(new ExpireCleanComponent(Duration.seconds(5)).animateOpacity())
                 .buildAndAttach();
+    }
+    
+    private Entity spawnWall(double x, double y) {
+    	PhysicsComponent physics = new PhysicsComponent();
+        physics.setBodyType(BodyType.STATIC);
+
+        var t = texture("Capture d’écran de 2021-12-17 16-52-19.png")//réussir à enlever la texture
+                .subTexture(new Rectangle2D(0, 0, 15, 550))
+                .multiplyColor(Color.RED);
+
+        return entityBuilder()
+                        .at(x, y)
+                        .viewWithBBox(t)
+                        .with(physics)
+                        .buildAndAttach();
     }
 
     private void dropBall() {
