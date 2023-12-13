@@ -119,13 +119,10 @@ public class DropApp extends GameApplication {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
-        var t = texture("brick.png")
-                .subTexture(new Rectangle2D(0, 0, 15, 14))
-                .multiplyColor(Color.RED);
-
         return entityBuilder()
                 .at(400, 300)
-                .viewWithBBox(t)
+                .bbox(new HitBox(BoundingShape.circle(9)))
+                .view(texture("nail.png", 15, 15))
                 .with(physics)
                 .buildAndAttach();
 
@@ -137,13 +134,10 @@ public class DropApp extends GameApplication {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setBodyType(BodyType.STATIC);
 
-        var t = texture("brick.png")
-                .subTexture(new Rectangle2D(0, 0, 15, 14))
-                .multiplyColor(Color.RED);
-
         return entityBuilder()
                         .at(x, y)
-                        .viewWithBBox(t)
+                        .bbox(new HitBox(BoundingShape.circle(9)))
+                        .view(texture("nail.png", 15, 15))
                         .with(physics)
                         .buildAndAttach();
 
@@ -165,7 +159,6 @@ public class DropApp extends GameApplication {
                 .bbox(new HitBox(BoundingShape.circle(9)))
                 .view(texture("img_1.png", 25, 25))
                 .with(physics)
-                .with(new ExpireCleanComponent(Duration.seconds(5)).animateOpacity())
                 .buildAndAttach();
     }
 
