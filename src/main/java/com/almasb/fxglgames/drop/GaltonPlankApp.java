@@ -10,8 +10,10 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -19,6 +21,10 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 public class GaltonPlankApp extends GameApplication {
 
     private int howManyBallsNeedsToSpawn;
+
+    private enum Type{
+        BALL
+    }
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -70,14 +76,28 @@ public class GaltonPlankApp extends GameApplication {
 
     @Override
     protected void initUI() {
-        ComboBox<Integer> dropdownMenu = new ComboBox<>();
+        ChoiceBox<Integer> dropdownMenu = new ChoiceBox<>();
+        //dropdownMenu.setEditable(true);
         dropdownMenu.getItems().addAll(50, 100, 150, 200, 250, 300);
 
-        dropdownMenu.setOnAction(event -> howManyBallsNeedsToSpawn = dropdownMenu.getValue());
-
-        addUINode(dropdownMenu);
+        //dropdownMenu.setOnAction(event -> handleComboBoxSelection(dropdownMenu));
+        Button launchButton = new Button("Launch");
+        launchButton.setOnAction(event -> handleChoiceBoxSelection(dropdownMenu.getValue()));
+        Button clear = new Button("Clear");
+        clear.setOnAction(event -> removeAllBalls());
+        HBox box = new HBox(dropdownMenu, launchButton, clear);
+        addUINode(box);
     }
 
+    private void handleChoiceBoxSelection(Integer i ) {
+        if(i != null) {
+            howManyBallsNeedsToSpawn = i;
+        }
+    }
+
+    private void removeAllBalls(){
+        getGameWorld().getEntitiesByType(Type.BALL).forEach(Entity::removeFromWorld);
+    }
 
     @Override
     protected void onUpdate(double tpf) {
@@ -85,7 +105,6 @@ public class GaltonPlankApp extends GameApplication {
             spawnBall();
             howManyBallsNeedsToSpawn--;
         }
-
     }
 
 
@@ -146,6 +165,7 @@ public class GaltonPlankApp extends GameApplication {
                 .bbox(new HitBox(BoundingShape.circle(5)))
                 .view(new Circle(5, 5, 5, Color.RED))
                 .with(physics)
+                .type(Type.BALL)
                 .buildAndAttach();
     }
     
