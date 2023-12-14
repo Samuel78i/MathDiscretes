@@ -53,16 +53,7 @@ public class DropApp extends GameApplication {
     /**
      * Types of entities in this game.
      */
-    private static final int NUM_PLANKS = 10;
-    private static final int BOARD_ROWS = 10;
-    private static final int BOARD_COLUMNS = 20;
-    private static final int BALL_RADIUS = 5;
-
     private Entity ball;
-
-    public enum Type {
-        BALL, NAIL
-    }
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -151,8 +142,6 @@ public class DropApp extends GameApplication {
 
     }
 
-
-
     private void spawnBall() {
         PhysicsComponent physics = new PhysicsComponent();
         physics.setFixtureDef(new FixtureDef().density(6.5f).friction(1.0f).restitution(0.05f));
@@ -176,17 +165,13 @@ public class DropApp extends GameApplication {
         physics.setBodyType(BodyType.STATIC);
 
         var t = texture("Wall.png")//réussir à enlever la texture
-                .subTexture(new Rectangle2D(0, 0, 14, 550));
+                .subTexture(new Rectangle2D(0, 0, 7, 550));
 
         return entityBuilder()
                         .at(x, y)
                         .viewWithBBox(t)
                         .with(physics)
                         .buildAndAttach();
-    }
-
-    private void dropBall() {
-        //ball.getComponent(PhysicsComponent.class).setLinearVelocity(FXGLMath.random(-200, 200), 600);
     }
 
     public static void main(String[] args) {
