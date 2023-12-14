@@ -129,8 +129,8 @@ public class DropApp extends GameApplication {
 
         return entityBuilder()
                 .at(400, 75)
-                .bbox(new HitBox(BoundingShape.circle(9)))
-                .view(texture("nail.png", 15, 15))
+                .bbox(new HitBox(BoundingShape.circle(8)))
+                .view(new Circle(8, 8, 8, Color.GRAY))
                 .with(physics)
                 .buildAndAttach();
 
@@ -144,8 +144,8 @@ public class DropApp extends GameApplication {
 
         return entityBuilder()
                         .at(x, y)
-                        .bbox(new HitBox(BoundingShape.circle(9)))
-                        .view(texture("nail.png", 15, 15))
+                        .bbox(new HitBox(BoundingShape.circle(8)))
+                        .view(new Circle(8, 8, 8, Color.GRAY))
                         .with(physics)
                         .buildAndAttach();
 
@@ -163,9 +163,9 @@ public class DropApp extends GameApplication {
         });
 
         ball = entityBuilder()
-                .at(400, 10) // ici à voir, normalement 400 pour que çe soit aligner au premier clou mais si on met 400 c'est pas aligner et ça bouge pas
-                .bbox(new HitBox(BoundingShape.circle(9)))
-                .view(texture("img_1.png", 25, 25))
+                .at(400, 10)
+                .bbox(new HitBox(BoundingShape.circle(6)))
+                .view(new Circle(6, 6, 6, Color.RED))
                 .with(physics)
                 .buildAndAttach();
     }
