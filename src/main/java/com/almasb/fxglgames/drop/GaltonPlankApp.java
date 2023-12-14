@@ -73,9 +73,7 @@ public class GaltonPlankApp extends GameApplication {
         ComboBox<Integer> dropdownMenu = new ComboBox<>();
         dropdownMenu.getItems().addAll(50, 100, 150, 200, 250, 300);
 
-        dropdownMenu.setOnAction(event -> {
-            howManyBallsNeedsToSpawn = dropdownMenu.getValue();
-        });
+        dropdownMenu.setOnAction(event -> howManyBallsNeedsToSpawn = dropdownMenu.getValue());
 
         addUINode(dropdownMenu);
     }
