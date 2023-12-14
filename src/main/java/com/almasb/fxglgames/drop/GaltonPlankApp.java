@@ -68,24 +68,19 @@ public class GaltonPlankApp extends GameApplication {
 
     @Override
     protected void initUI() {
-        // Créer un menu déroulant
         ComboBox<Integer> dropdownMenu = new ComboBox<>();
         dropdownMenu.getItems().addAll(50, 100, 150, 200, 250, 300);
 
-        // Ajouter un gestionnaire d'événements pour gérer les sélections du menu déroulant
         dropdownMenu.setOnAction(event -> {
             for(int i = 0; i < dropdownMenu.getValue(); i++){
                 spawnBall();
             }
-            // Vous pouvez ajouter ici la logique en fonction de l'option sélectionnée
         });
 
-        // Utiliser un StackPane comme conteneur
         addUINode(dropdownMenu);
 
 
     }
-
 
 
 
