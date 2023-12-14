@@ -163,7 +163,7 @@ public class DropApp extends GameApplication {
         });
 
         ball = entityBuilder()
-                .at(395, 10) // ici à voir, normalement 400 pour que çe soit aligner au premier clou mais si on met 400 c'est pas aligner et ça bouge pas
+                .at(400, 10) // ici à voir, normalement 400 pour que çe soit aligner au premier clou mais si on met 400 c'est pas aligner et ça bouge pas
                 .bbox(new HitBox(BoundingShape.circle(9)))
                 .view(texture("img_1.png", 25, 25))
                 .with(physics)
