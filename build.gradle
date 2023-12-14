@@ -1,13 +1,12 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.10'
-    id 'org.jetbrains.kotlin.jvm' version '1.5.32'
 }
 
 apply plugin: "eclipse"
 
 application {
-    mainModule = 'drop.main'
+    mainModule = 'GaltonPlankApp.main'
 }
 
 repositories {
@@ -19,8 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.32'
-    implementation 'com.github.almasb:fxgl:17.1'
+    implementation 'com.github.almasb:fxgl:17.3'
 }
 
 javafx {
@@ -28,4 +26,4 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.media' ]
 }
 
-mainClassName = 'com.almasb.fxglgames.drop.DropApp'
+mainClassName = 'com.almasb.fxglgames.drop.GaltonPlankApp'
