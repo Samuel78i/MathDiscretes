@@ -10,6 +10,7 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.MouseButton;
@@ -86,6 +87,7 @@ public class GaltonPlankApp extends GameApplication {
         Button clear = new Button("Clear");
         clear.setOnAction(event -> removeAllBalls());
         HBox box = new HBox(dropdownMenu, launchButton, clear);
+        getGameScene().setCursor(Cursor.DEFAULT);
         addUINode(box);
     }
 
