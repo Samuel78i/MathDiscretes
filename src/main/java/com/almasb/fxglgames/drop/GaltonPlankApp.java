@@ -18,6 +18,8 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class GaltonPlankApp extends GameApplication {
 
+    private int howManyBallsNeedsToSpawn;
+
     @Override
     protected void initSettings(GameSettings settings) {
         settings.setWidth(800);
@@ -71,18 +73,20 @@ public class GaltonPlankApp extends GameApplication {
         ComboBox<Integer> dropdownMenu = new ComboBox<>();
         dropdownMenu.getItems().addAll(50, 100, 150, 200, 250, 300);
 
-        dropdownMenu.setOnAction(event -> {
-            for(int i = 0; i < dropdownMenu.getValue(); i++){
-                spawnBall();
-            }
-        });
+        dropdownMenu.setOnAction(event -> howManyBallsNeedsToSpawn = dropdownMenu.getValue());
 
         addUINode(dropdownMenu);
-
-
     }
 
 
+    @Override
+    protected void onUpdate(double tpf) {
+        if(howManyBallsNeedsToSpawn > 0){
+            spawnBall();
+            howManyBallsNeedsToSpawn--;
+        }
+
+    }
 
 
     /**
