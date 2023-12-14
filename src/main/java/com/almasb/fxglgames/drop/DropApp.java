@@ -129,8 +129,8 @@ public class DropApp extends GameApplication {
 
         return entityBuilder()
                 .at(400, 75)
-                .bbox(new HitBox(BoundingShape.circle(8)))
-                .view(new Circle(8, 8, 8, Color.GRAY))
+                .bbox(new HitBox(BoundingShape.circle(4)))
+                .view(new Circle(4, 4, 4, Color.GRAY))
                 .with(physics)
                 .buildAndAttach();
 
@@ -144,8 +144,8 @@ public class DropApp extends GameApplication {
 
         return entityBuilder()
                         .at(x, y)
-                        .bbox(new HitBox(BoundingShape.circle(8)))
-                        .view(new Circle(8, 8, 8, Color.GRAY))
+                        .bbox(new HitBox(BoundingShape.circle(4)))
+                        .view(new Circle(4, 4, 4, Color.GRAY))
                         .with(physics)
                         .buildAndAttach();
 
@@ -159,13 +159,14 @@ public class DropApp extends GameApplication {
         physics.setBodyType(BodyType.DYNAMIC);
 
         physics.setOnPhysicsInitialized(() -> {
-            physics.setLinearVelocity(0, 50 * 5);
+            physics.setLinearVelocity(0, 200);
         });
 
+        double n = Math.random() * (408 - 391) + 391;
         ball = entityBuilder()
-                .at(400, 10)
-                .bbox(new HitBox(BoundingShape.circle(6)))
-                .view(new Circle(6, 6, 6, Color.RED))
+                .at(n, 10)
+                .bbox(new HitBox(BoundingShape.circle(5)))
+                .view(new Circle(5, 5, 5, Color.RED))
                 .with(physics)
                 .buildAndAttach();
     }
@@ -182,14 +183,6 @@ public class DropApp extends GameApplication {
                         .viewWithBBox(t)
                         .with(physics)
                         .buildAndAttach();
-        
-        /* return entityBuilder()
-                .at(400, 75)
-                .bbox(new HitBox(BoundingShape.circle(9)))
-                .view(texture("nail.png", 15, 15))
-                .with(physics)
-                .buildAndAttach();
-                */
     }
 
     private void dropBall() {
