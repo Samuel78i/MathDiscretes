@@ -10,10 +10,10 @@ import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.physics.box2d.dynamics.BodyType;
 import com.almasb.fxgl.physics.box2d.dynamics.FixtureDef;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.ComboBox;
 import javafx.scene.input.MouseButton;
 import javafx.scene.shape.Circle;
 import javafx.scene.paint.Color;
-
 import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class GaltonPlankApp extends GameApplication {
@@ -36,7 +36,6 @@ public class GaltonPlankApp extends GameApplication {
                 .buildScreenBoundsAndAttach(40);
 
 
-
         Entity firstTriangle = spawnFirstNail();
         double xFirstOne = firstTriangle.getX();
         double yFirstOne = firstTriangle.getY();
@@ -48,10 +47,8 @@ public class GaltonPlankApp extends GameApplication {
                 spawnWall(xFirstOne - 89, yFirstOne + 35);
                 spawnANail(xFirstOne - 90, yFirstOne + 30);
                 spawnWall(xFirstOne - 29, yFirstOne + 35);
-                e = spawnANail(xFirstOne - 30, yFirstOne + 30);}
-        	else {
-                e = spawnANail(xFirstOne - 30, yFirstOne + 30);
             }
+            e = spawnANail(xFirstOne - 30, yFirstOne + 30);
             xFirstOne = e.getX();
             yFirstOne = e.getY();
             x = e.getX();
@@ -68,6 +65,29 @@ public class GaltonPlankApp extends GameApplication {
         spawnWall(x + 61, y + 6);
         spawnANail(x + 60, y);
     }
+
+    @Override
+    protected void initUI() {
+        // Créer un menu déroulant
+        ComboBox<Integer> dropdownMenu = new ComboBox<>();
+        dropdownMenu.getItems().addAll(50, 100, 150, 200, 250, 300);
+
+        // Ajouter un gestionnaire d'événements pour gérer les sélections du menu déroulant
+        dropdownMenu.setOnAction(event -> {
+            for(int i = 0; i < dropdownMenu.getValue(); i++){
+                spawnBall();
+            }
+            // Vous pouvez ajouter ici la logique en fonction de l'option sélectionnée
+        });
+
+        // Utiliser un StackPane comme conteneur
+        addUINode(dropdownMenu);
+
+
+    }
+
+
+
 
 
     /**
