@@ -1,12 +1,15 @@
 ## La Planche de Galton
 
 Ce dépot sert d'annexe à notre projet de mathématiques discrètes, sujet numéro 28, au semestre 5.
+
 Il s'agit d'une simulation de la Planche de Galton avec java.
 
 ### Participant.es
 
 Lecomte Georges
+
 Benoiton Léa
+
 Tardieu Samuel
 
 ### Run via Gradle
